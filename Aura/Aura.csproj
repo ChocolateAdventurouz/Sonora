@@ -17,6 +17,7 @@
     <RepositoryUrl>https://github.com/ImAxel0/Aura</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageId>Aura.NET</PackageId>
   </PropertyGroup>
 
   <!-- include DryWetMidi native dlls in the nuget package -->
@@ -37,7 +38,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="Aura.targets">
+    <None Include="Aura.NET.targets">
       <PackagePath>build\</PackagePath>
       <Pack>true</Pack>
     </None>

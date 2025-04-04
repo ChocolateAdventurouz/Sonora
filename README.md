@@ -39,7 +39,7 @@ Aura is available on Windows devices only. There is no cross platform support as
 The easiest way to get started is to install the NuGet package with the NuGet Package Manager you can find on Visual Studio in `Tools` > `NuGet Package Manager` > `Package Manager Console`, running the command below. For others IDE use the relative package manager.
 
 ```bash
-Install-Package Aura
+Install-Package Aura.NET
 ```
 
 If you are gonna use VST plugins in your app, you will also have to install the `VST.NET2-Host` package.
