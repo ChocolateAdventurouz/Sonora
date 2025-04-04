@@ -1,0 +1,18 @@
+﻿<Window x:Class="VstPlugins.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VstPlugins"
+        mc:Ignorable="d"
+        Title="Vst Example Program" Height="450" Width="800">
+    <Grid>
+        <StackPanel Background="DarkGray">
+            <TextBlock FontSize="18">Instructions</TextBlock>
+            <TextBlock FontSize="16">1. Load the VST with the "Load VST" button below.</TextBlock>
+            <TextBlock FontSize="16">2. Drag and drop the "Reality_GMGS_falcomod.sf2" file from the "vst" folder of this project or any .sf2 file into the vst window.</TextBlock>
+            <TextBlock FontSize="16">3. Play some notes.</TextBlock>
+        </StackPanel>
+        <Button Background="DarkOrange" Click="Button_Click" Width="100" Height="50">Load VST</Button>
+    </Grid>
+</Window>
