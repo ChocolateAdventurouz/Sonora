@@ -98,23 +98,6 @@ public class AudioClip : Clip
         if (FadeIn > 0)
             fade.BeginFadeIn(FadeIn * 1000);
 
-        // Kinda bad but seems to works for now
-        if (FadeOut > 0)
-        {
-            Task.Run(() =>
-            {
-                while (true)
-                {
-                    if (PlaybackStopWatch.Elapsed.TotalSeconds >= playDuration - FadeOut)
-                    {
-                        fade.BeginFadeOut(FadeOut * 1000);
-                        Console.WriteLine($"Time: {CurrentTime:n3}");
-                        break;
-                    }
-                }
-            });
-        }
-
         // Apply volume and pan
         _stereoProvider = new StereoSampleProvider(fade)
         {
@@ -129,6 +112,22 @@ public class AudioClip : Clip
         // Start playback timer
         PlaybackStopWatch.Restart();
         PlaybackStopWatch.SetTime(TimeSpan.FromSeconds(StartMarker));
+
+        // Kinda bad but seems to works for now
+        if (FadeOut > 0)
+        {
+            Task.Run(() =>
+            {
+                while (IsPlaying())
+                {
+                    if (PlaybackStopWatch.Elapsed.TotalSeconds >= playDuration - FadeOut)
+                    {
+                        fade.BeginFadeOut(FadeOut * 1000);
+                        break;
+                    }
+                }
+            });
+        }
 
         // Start automations
         StartAutomations();
