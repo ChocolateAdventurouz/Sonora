@@ -550,22 +550,22 @@ public abstract class Clip
     /// <param name="interpolation">The interpolation type used for going to the next automation point.</param>
     public void AddAutomationPoint(AutomationParameter parameter, double time, float value, InterpolationType interpolation = InterpolationType.Linear)
     {
-        if (!Automations.TryGetValue(parameter, out var track))
+        if (!Automations.TryGetValue(parameter, out var lane))
         {
-            track = new AutomationLane { Parameter = parameter };
-            _automations[parameter] = track;
+            lane = new AutomationLane { Parameter = parameter };
+            _automations[parameter] = lane;
         }
 
         // If there is already a point at passed time, update it
-        if (track.Points.Any(p => p.Time == time))
+        if (lane.Points.Any(p => p.Time == time))
         {
-            var to_update = track.Points.First(value => value.Time == time);
+            var to_update = lane.Points.First(value => value.Time == time);
             to_update.Value = value;
             to_update.Interpolation = interpolation;
         }
         else
         {
-            track.Points.Add(new AutomationPoint
+            lane.Points.Add(new AutomationPoint
             {
                 Time = time,
                 Value = value,
@@ -574,7 +574,64 @@ public abstract class Clip
         }
 
         // Keep points sorted by time
-        track.Points.Sort((a, b) => a.Time.CompareTo(b.Time));
+        lane.Points.Sort((a, b) => a.Time.CompareTo(b.Time));
+    }
+
+    /// <summary>
+    /// Remove an automation point for a parameter by time.
+    /// </summary>
+    /// <param name="parameter">The automation parameter of the point to remove.</param>
+    /// <param name="time">The time of the point to remove.</param>
+    /// <returns>True if the point was removed, false otherwise.</returns>
+    public bool ClearAutomationPoint(AutomationParameter parameter, double time)
+    {
+        // If there is no lane for the parameter return false
+        if (!Automations.TryGetValue(parameter, out var lane))
+        {
+            return false;
+        }
+
+        // Find the point at the specified time
+        var pointToRemove = lane.Points.FirstOrDefault(p => p.Time == time);
+        if (pointToRemove == null)
+        {
+            return false;
+        }
+
+        bool removed = lane.Points.Remove(pointToRemove);
+
+        // If this was the last point in the lane, remove the entire lane
+        if (lane.Points.Count == 0)
+        {
+            _automations.Remove(parameter);
+        }
+
+        return removed;
+    }
+
+    /// <summary>
+    /// Remove an automation point for a parameter.
+    /// </summary>
+    /// <param name="parameter">The automation parameter of the point to remove.</param>
+    /// <param name="point">The automation point to remove.</param>
+    /// <returns>True if the point was removed, false otherwise.</returns>
+    public bool ClearAutomationPoint(AutomationParameter parameter, AutomationPoint point)
+    {
+        // If there is no lane for the parameter return false
+        if (!Automations.TryGetValue(parameter, out var lane))
+        {
+            return false;
+        }
+
+        bool removed = lane.Points.Remove(point);
+
+        // If this was the last point in the lane, remove the entire lane
+        if (removed && lane.Points.Count == 0)
+        {
+            _automations.Remove(parameter);
+        }
+
+        return removed;
     }
 
     /// <summary>
