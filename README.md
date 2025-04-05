@@ -2,8 +2,8 @@
   <img src="https://i.imgur.com/gSr1Wwh.png" width="250" height="250" />
 </p>
 
-# Aura ![GitHub License](https://img.shields.io/badge/License-MIT-default.svg?&style=for-the-badge) [![Github All Releases](https://img.shields.io/github/v/release/ImAxel0/Aura?&style=for-the-badge)]()
-
+# Aura ![GitHub License](https://img.shields.io/badge/License-MIT-default.svg) ![NuGet Version](https://img.shields.io/nuget/v/Aura.NET) [![Scc Count Badge](https://sloc.xyz/github/ImAxel0/Aura/)](https://github.com/ImAxel0/Aura/)
+  
 ### .NET Audio Framework for audio and MIDI playback, editing, and plugin integration.
 
 ---
