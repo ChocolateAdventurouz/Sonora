@@ -21,6 +21,8 @@ Aura is a .NET audio framework which provides a structured workflow for handling
 
 - **Automations**: automate clips parameters like volume and pan during playback.
 
+Too see a more comprehensive list see the [FEATURES.md](https://github.com/ImAxel0/Aura/blob/master/Aura/FEATURES.md) document.
+
 ## Highlights :star2:
 - **Built on Robust Libraries**: the framework makes use of popular open source libraries like NAudio, DryWetMidi, SoundTouch.Net and VST.NET.
 
