@@ -434,8 +434,9 @@ public class AudioClip : Clip
         // Calculate timing in samples
         var sampleRate = stereoSampleProvider.WaveFormat.SampleRate;
         var channels = stereoSampleProvider.WaveFormat.Channels;
-        var totalSamples = (long)((GetDuration() - StartMarker) * sampleRate);
-        var fadeOutStartSample = (long)((GetDuration() - StartMarker - FadeOut) * sampleRate);
+        var totalDuration = (EndMarker > 0 ? EndMarker : GetDuration()) - StartMarker;
+        var totalSamples = (long)(totalDuration * sampleRate);
+        var fadeOutStartSample = (long)((totalDuration - FadeOut) * sampleRate);
 
         var bufferSize = sampleRate * channels / 10;
         var buffer = new float[bufferSize];
