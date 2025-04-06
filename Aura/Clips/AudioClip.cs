@@ -112,7 +112,7 @@ public class AudioClip : Clip
         // Start playback timer
         PlaybackStopWatch.Restart();
         PlaybackStopWatch.SetTime(TimeSpan.FromSeconds(StartMarker));
-
+        
         // Kinda bad but seems to works for now
         if (FadeOut > 0)
         {
@@ -385,6 +385,7 @@ public class AudioClip : Clip
         }
     }
 
+    /// <inheritdoc/>
     public override Clip Duplicate()
     {
         return new AudioClip(FilePath, this.Track)
@@ -401,6 +402,91 @@ public class AudioClip : Clip
             Time = this.Time,
             Volume = this.Volume
         }.CopyAutomationsFrom(this);
+    }
+
+    /// <summary>
+    /// Save the processed audio file to disk.
+    /// </summary>
+    /// <param name="outputFilePath">Path where to store the processed wav file.</param>
+    public void SaveProcessedAudioFile(string outputFilePath)
+    {
+        // Start from StartMarker
+        AudioFile.CurrentTime = TimeSpan.FromSeconds(StartMarker);
+
+        // Recreate the processing chain
+        var soundTouchProvider = new SoundTouchSampleProvider(AudioFile);
+        var fadeProvider = new FadeInOutSampleProvider(soundTouchProvider);
+        var stereoSampleProvider = new StereoSampleProvider(fadeProvider);
+
+        soundTouchProvider.PitchSemiTones = Pitch;
+        soundTouchProvider.Tempo = Speed;
+        stereoSampleProvider.Pan = Pan / 50f;
+        stereoSampleProvider.SetGain(Extensions.ToLinearVolume(Volume));
+
+        // Apply fade-in
+        if (FadeIn > 0)
+        {
+            fadeProvider.BeginFadeIn(FadeIn * 1000);
+        }
+
+        bool fadeOutStarted = false;
+
+        // Calculate timing in samples
+        var sampleRate = stereoSampleProvider.WaveFormat.SampleRate;
+        var channels = stereoSampleProvider.WaveFormat.Channels;
+        var totalSamples = (long)((GetDuration() - StartMarker) * sampleRate);
+        var fadeOutStartSample = (long)((GetDuration() - StartMarker - FadeOut) * sampleRate);
+
+        var bufferSize = sampleRate * channels / 10;
+        var buffer = new float[bufferSize];
+
+        using (var writer = new WaveFileWriter(outputFilePath, stereoSampleProvider.WaveFormat))
+        {
+            long totalSamplesRead = 0;
+
+            while (totalSamplesRead < totalSamples)
+            {
+                // Update automation time (convert samples to seconds)
+                double currentAutomationTime = (double)totalSamplesRead / sampleRate;
+
+                // Apply automations
+                foreach (var (parameter, lane) in Automations)
+                {
+                    float value = lane.GetValueAtTime(currentAutomationTime);
+                    switch (parameter)
+                    {
+                        case AutomationParameter.Volume:
+                            stereoSampleProvider.SetGain(Extensions.ToLinearVolume(value));
+                            break;
+                        case AutomationParameter.Pan:
+                            stereoSampleProvider.Pan = value / 50f;
+                            break;
+                        case AutomationParameter.Pitch:
+                            soundTouchProvider.PitchSemiTones = value;
+                            break;
+                    }
+                }
+
+                // Calculate samples remaining
+                var samplesRemaining = totalSamples - totalSamplesRead;
+                var samplesToRead = (int)Math.Min(buffer.Length / channels, samplesRemaining);
+
+                // Start fade-out at right time
+                if (!fadeOutStarted && FadeOut > 0 && totalSamplesRead >= fadeOutStartSample)
+                {
+                    fadeProvider.BeginFadeOut(FadeOut * 1000);
+                    fadeOutStarted = true;
+                }
+
+                // Read samples
+                var samplesRead = stereoSampleProvider.Read(buffer, 0, samplesToRead * channels);
+                if (samplesRead <= 0) break;
+
+                // Write samples
+                writer.WriteSamples(buffer, 0, samplesRead);
+                totalSamplesRead += samplesRead / channels;
+            }
+        }
     }
 
     /// <inheritdoc/>
