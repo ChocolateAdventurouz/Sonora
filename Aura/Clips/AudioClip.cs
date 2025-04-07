@@ -21,30 +21,7 @@ public class AudioClip : Clip
     {
         Name = Path.GetFileNameWithoutExtension(filePath);
         AudioFile = new AudioFileReader(filePath);
-
-        VolumeChanged += (sender, e) => {
-            if (IsPlaying()) {
-                _stereoProvider.SetGain(Extensions.ToLinearVolume(e.NewValue));
-            }
-        };
-
-        PanChanged += (sender, e) => {
-            if (IsPlaying()) {
-                _stereoProvider.Pan = e.NewValue / 50f;
-            }
-        };
-
-        PitchChanged += (sender, e) => {
-            if (IsPlaying()) {
-                _soundtouchProvider.PitchSemiTones = e.NewValue;
-            }
-        };
-
-        StartMarkerChanged += (sender, e) => {
-            if (IsPlaying() && e.NewTime >= GetCurrentTime()) {
-                Seek(e.NewTime);
-            }
-        };
+        SetupClipEvents();
     }
 
     /// <summary>
@@ -57,27 +34,35 @@ public class AudioClip : Clip
         Name = Path.GetFileNameWithoutExtension(filePath);
         AudioFile = new AudioFileReader(filePath);
         parentTrack.AddClip(this);
+        SetupClipEvents();
+    }
 
+    private void SetupClipEvents()
+    {
         VolumeChanged += (sender, e) => {
-            if (IsPlaying()) {
+            if (IsPlaying())
+            {
                 _stereoProvider?.SetGain(Extensions.ToLinearVolume(e.NewValue));
             }
         };
 
         PanChanged += (sender, e) => {
-            if (IsPlaying()) {
+            if (IsPlaying())
+            {
                 _stereoProvider.Pan = e.NewValue / 50f;
             }
         };
 
         PitchChanged += (sender, e) => {
-            if (IsPlaying()) {
+            if (IsPlaying())
+            {
                 _soundtouchProvider.PitchSemiTones = e.NewValue;
             }
         };
 
         StartMarkerChanged += (sender, e) => {
-            if (IsPlaying() && e.NewTime >= GetCurrentTime()) {
+            if (IsPlaying() && e.NewTime > GetCurrentTime())
+            {
                 Seek(e.NewTime);
             }
         };

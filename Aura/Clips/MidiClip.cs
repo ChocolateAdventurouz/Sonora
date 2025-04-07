@@ -21,12 +21,7 @@ public class MidiClip : Clip
         Name = Path.GetFileNameWithoutExtension(filePath);
         _midiFilePath = filePath;
         MidiFile = MidiFile.Read(filePath);
-
-        StartMarkerChanged += (sender, e) => {
-            if (IsPlaying() && e.NewTime >= GetCurrentTime()) {
-                Seek(e.NewTime);
-            }
-        };
+        SetupClipEvents();
     }
 
     /// <summary>
@@ -40,12 +35,7 @@ public class MidiClip : Clip
         _midiFilePath = filePath;
         MidiFile = MidiFile.Read(filePath);
         parentTrack.AddClip(this);
-
-        StartMarkerChanged += (sender, e) => {
-            if (IsPlaying() && e.NewTime >= GetCurrentTime()) {
-                Seek(e.NewTime);
-            }
-        };
+        SetupClipEvents();
     }
 
     /// <summary>
@@ -55,12 +45,7 @@ public class MidiClip : Clip
     public MidiClip(MidiFile midiFile)
     {
         MidiFile = midiFile;
-
-        StartMarkerChanged += (sender, e) => {
-            if (IsPlaying() && e.NewTime >= GetCurrentTime()) {
-                Seek(e.NewTime);
-            }
-        };
+        SetupClipEvents();
     }
 
     /// <summary>
@@ -72,9 +57,14 @@ public class MidiClip : Clip
     {
         MidiFile = midiFile;
         parentTrack.AddClip(this);
+        SetupClipEvents();
+    }
 
+    private void SetupClipEvents()
+    {
         StartMarkerChanged += (sender, e) => {
-            if (IsPlaying() && e.NewTime >= GetCurrentTime()) {
+            if (IsPlaying() && e.NewTime > GetCurrentTime())
+            {
                 Seek(e.NewTime);
             }
         };
