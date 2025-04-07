@@ -132,7 +132,6 @@ public class AudioClip : Clip
     /// <inheritdoc/>
     public override void Stop()
     {
-        AudioFile.CurrentTime = TimeSpan.Zero;
         Track?.Mixer.RemoveMixerInput(SampleProvider);
         AutomationCTS?.Cancel();
     }

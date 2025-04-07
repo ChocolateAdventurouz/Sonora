@@ -67,6 +67,10 @@ public class MidiClip : Clip
         if (IsPlaying() || !Enabled)
             return;
 
+        // Disposal of previous playback
+        MidiPlayback?.Dispose();
+        MidiPlayback = null;
+
         MidiPlayback = MidiFile.GetPlayback();
         MidiPlayback.TrackProgram = true;
         MidiPlayback.TrackNotes = true;
@@ -92,8 +96,6 @@ public class MidiClip : Clip
     public override void Stop()
     {
         MidiPlayback?.Stop();
-        MidiPlayback?.Dispose();
-        MidiPlayback = null;
         AutomationCTS?.Cancel();
     }
 
