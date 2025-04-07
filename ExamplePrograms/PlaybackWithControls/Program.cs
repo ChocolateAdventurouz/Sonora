@@ -1,6 +1,6 @@
-﻿using Aura;
-using Aura.Clips;
-using Aura.Tracks;
+﻿using Sonora;
+using Sonora.Clips;
+using Sonora.Tracks;
 
 public class Program
 {
@@ -9,10 +9,10 @@ public class Program
 
     private static void Main()
     {
-        AuraMain.Init(); // Initialize the framework
+        SonoraMain.Init(); // Initialize the framework
 
         // Create an audio device using the WASAPI API in exclusive mode
-        AuraMain.CreateWasapiDevice(true);
+        SonoraMain.CreateWasapiDevice(true);
 
         // Create an audio clip from an audio file
         var audioClip = new AudioClip("sound.mp3");

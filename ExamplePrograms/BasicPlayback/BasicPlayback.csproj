@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Aura\Aura.csproj" />
+    <ProjectReference Include="..\..\Sonora\Sonora.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,14 +1,14 @@
-﻿using Aura;
-using Aura.Clips;
-using Aura.Tracks;
-using Aura.Automations;
+﻿using Sonora;
+using Sonora.Clips;
+using Sonora.Tracks;
+using Sonora.Automations;
 
 public class Program
 {
     private static void Main()
     {
-        AuraMain.Init(); // Initialize the framework
-        AuraMain.CreateAudioDevice(AudioAPI.WaveOut); // Create an audio device using the WaveOut API
+        SonoraMain.Init(); // Initialize the framework
+        SonoraMain.CreateAudioDevice(AudioAPI.WaveOut); // Create an audio device using the WaveOut API
 
         // Create an audio clip from an audio file
         var audioClip = new AudioClip("sound.mp3");

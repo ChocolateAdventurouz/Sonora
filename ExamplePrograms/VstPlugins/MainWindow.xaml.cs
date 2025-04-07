@@ -1,6 +1,6 @@
-﻿using Aura;
-using Aura.Plugins.VST;
-using Aura.Tracks;
+﻿using Sonora;
+using Sonora.Plugins.VST;
+using Sonora.Tracks;
 using System.Windows;
 
 namespace VstPlugins
@@ -14,8 +14,8 @@ namespace VstPlugins
         {
             InitializeComponent();
 
-            AuraMain.Init(); // Initialize the framework
-            AuraMain.CreateAudioDevice(AudioAPI.WASAPI); // Create an audio device using the WASAPI API
+            SonoraMain.Init(); // Initialize the framework
+            SonoraMain.CreateAudioDevice(AudioAPI.WASAPI); // Create an audio device using the WASAPI API
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
