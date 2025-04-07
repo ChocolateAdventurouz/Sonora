@@ -39,6 +39,12 @@ public class AudioClip : Clip
                 _soundtouchProvider.PitchSemiTones = e.NewValue;
             }
         };
+
+        StartMarkerChanged += (sender, e) => {
+            if (IsPlaying() && e.NewTime >= GetCurrentTime()) {
+                Seek(e.NewTime);
+            }
+        };
     }
 
     /// <summary>
@@ -67,6 +73,12 @@ public class AudioClip : Clip
         PitchChanged += (sender, e) => {
             if (IsPlaying()) {
                 _soundtouchProvider.PitchSemiTones = e.NewValue;
+            }
+        };
+
+        StartMarkerChanged += (sender, e) => {
+            if (IsPlaying() && e.NewTime >= GetCurrentTime()) {
+                Seek(e.NewTime);
             }
         };
     }
