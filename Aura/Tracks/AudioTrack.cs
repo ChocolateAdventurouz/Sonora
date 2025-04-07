@@ -17,7 +17,6 @@ public sealed class AudioTrack : Track
     private WaveInEvent _inputDevice;
     private WaveFileWriter _waveFileWriter;
     private string _lastRecordPath;
-    internal Dictionary<ISampleProvider, Clip> _mixerClips = new();
 
     /// <summary>
     /// Create a new audio track.
@@ -42,14 +41,6 @@ public sealed class AudioTrack : Track
         Mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(AuraMain.SampleRate, 2))
         {
             ReadFully = true
-        };
-
-        Mixer.MixerInputEnded += (sender, e) => { 
-            if (_mixerClips.ContainsKey(e.SampleProvider))
-            {
-                _mixerClips[e.SampleProvider].PlaybackStopWatch.Stop();
-                _mixerClips.Remove(e.SampleProvider);
-            }
         };
 
         // Initialize plugins chain to apply plugins effects (returns audio processed by all track vst's)
@@ -86,7 +77,6 @@ public sealed class AudioTrack : Track
             clip.SampleProvider = resampler;
         }
         Mixer.AddMixerInput(clip.SampleProvider);
-        _mixerClips.Add(clip.SampleProvider, clip);
     }
 
     /// <inheritdoc/>

@@ -109,10 +109,6 @@ public class AudioClip : Clip
         SampleProvider = _stereoProvider;
         Track.FireClip(this);
 
-        // Start playback timer
-        PlaybackStopWatch.Restart();
-        PlaybackStopWatch.SetTime(TimeSpan.FromSeconds(StartMarker));
-        
         // Kinda bad but seems to works for now
         if (FadeOut > 0)
         {
@@ -120,7 +116,7 @@ public class AudioClip : Clip
             {
                 while (IsPlaying())
                 {
-                    if (PlaybackStopWatch.Elapsed.TotalSeconds >= playDuration - FadeOut)
+                    if (GetCurrentTime() >= playDuration - FadeOut)
                     {
                         fade.BeginFadeOut(FadeOut * 1000);
                         break;
@@ -138,33 +134,7 @@ public class AudioClip : Clip
     {
         AudioFile.CurrentTime = TimeSpan.Zero;
         Track?.Mixer.RemoveMixerInput(SampleProvider);
-        if (IsInTrack && SampleProvider != null)
-        {
-            // bad implementation
-            var audioTrack = Track as AudioTrack;
-            audioTrack._mixerClips.Remove(SampleProvider);
-        }
         AutomationCTS?.Cancel();
-        PlaybackStopWatch.Reset();
-    }
-
-    /// <inheritdoc/>
-    protected override void Stop(bool resetTimer)
-    {
-        AudioFile.CurrentTime = TimeSpan.Zero;
-        Track?.Mixer.RemoveMixerInput(SampleProvider);
-        if (IsInTrack && SampleProvider != null)
-        {
-            // bad implementation
-            var audioTrack = Track as AudioTrack;
-            audioTrack._mixerClips.Remove(SampleProvider);
-        }
-        AutomationCTS?.Cancel();
-
-        if (resetTimer)
-            PlaybackStopWatch.Reset();
-        else 
-            PlaybackStopWatch.Stop();
     }
 
     /// <inheritdoc/>
@@ -191,7 +161,6 @@ public class AudioClip : Clip
         }
 
         AudioFile.CurrentTime = TimeSpan.FromSeconds(time);
-        PlaybackStopWatch.SetTime(TimeSpan.FromSeconds(time));
     }
 
     /// <inheritdoc/>
@@ -204,6 +173,12 @@ public class AudioClip : Clip
     public override double GetDuration()
     {
         return AudioFile.TotalTime.TotalSeconds;
+    }
+
+    /// <inheritdoc/>
+    protected override double GetCurrentTime()
+    {
+        return AudioFile.CurrentTime.TotalSeconds;
     }
 
     /// <inheritdoc/>

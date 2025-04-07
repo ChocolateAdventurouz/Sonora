@@ -96,7 +96,7 @@ public abstract class Clip
     /// <summary>
     /// Clip current playback time.
     /// </summary>
-    public double CurrentTime => PlaybackStopWatch.Elapsed.TotalSeconds;
+    public double CurrentTime => GetCurrentTime();
 
     //(GetDuration() - StartMarker - (EndMarker - StartMarker)) / Speed;
     /// <summary>
@@ -419,11 +419,6 @@ public abstract class Clip
         }
     }
 
-    /// <summary>
-    /// Keep track of the current playback time.
-    /// </summary>
-    internal AdjustableStopwatch PlaybackStopWatch { get; set; } = new();
-
     private readonly Dictionary<AutomationParameter, AutomationLane> _automations = new();
     /// <summary>
     /// Automations of this clip.
@@ -446,8 +441,14 @@ public abstract class Clip
     /// <summary>
     /// Get the clip real duration in seconds without accounting starting/ending offsets.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The unprocessed clip duration.</returns>
     public abstract double GetDuration();
+
+    /// <summary>
+    /// Get the clip playback current time.
+    /// </summary>
+    /// <returns>The clip playback current time.</returns>
+    protected abstract double GetCurrentTime();
 
     /// <summary>
     /// Split the clip at the specified time.
@@ -493,12 +494,6 @@ public abstract class Clip
     /// Stop this clip playback.
     /// </summary>
     public abstract void Stop();
-
-    /// <summary>
-    /// Stop this clip playback and optionally reset or stop the playback timer. (used internally for automations)
-    /// </summary>
-    /// <param name="resetTimer"></param>
-    protected abstract void Stop(bool resetTimer);
 
     /// <summary>
     /// Go to a specific time during playback.
@@ -663,7 +658,7 @@ public abstract class Clip
             {
                 while (!AutomationCTS.IsCancellationRequested && IsPlaying())
                 {
-                    double currentTime = PlaybackStopWatch.Elapsed.TotalSeconds;
+                    double currentTime = GetCurrentTime();
                     
                     // Process each automation lane
                     foreach (var (parameter, lane) in Automations)
@@ -672,10 +667,10 @@ public abstract class Clip
                         ApplyParameter(parameter, value);
                     }
 
-                    // Stop the clip if EndMarker is reached (this is used when seeking to a new time)
+                    // Stop the clip if EndMarker is reached
                     if (currentTime >= EndMarker && EndMarker > 0)
                     {
-                        Stop(false);
+                        Stop();
                     }
 
                     await Task.Delay(16, AutomationCTS.Token); // ~60fps update rate

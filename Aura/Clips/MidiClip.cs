@@ -67,8 +67,6 @@ public class MidiClip : Clip
         if (IsPlaying() || !Enabled)
             return;
 
-        double playDuration = Duration;
-
         MidiPlayback = MidiFile.GetPlayback();
         MidiPlayback.TrackProgram = true;
         MidiPlayback.TrackNotes = true;
@@ -78,17 +76,13 @@ public class MidiClip : Clip
         if (EndMarker > 0)
         {
             MidiPlayback.PlaybackEnd = new MetricTimeSpan(TimeSpan.FromSeconds(EndMarker));
-        }
-       
-        MidiPlayback.Finished += (sender, e) => {
-            PlaybackStopWatch.Stop();
-        };
+            MidiPlayback.Finished += (sender, e) =>
+            {
+                Stop();
+            };
+        }   
 
         Track.FireClip(this);
-
-        // Start playback timer
-        PlaybackStopWatch.Restart();
-        PlaybackStopWatch.SetTime(TimeSpan.FromSeconds(StartMarker));
 
         // Start automations
         StartAutomations();
@@ -99,21 +93,14 @@ public class MidiClip : Clip
     {
         MidiPlayback?.Stop();
         MidiPlayback?.Dispose();
+        MidiPlayback = null;
         AutomationCTS?.Cancel();
-        PlaybackStopWatch.Reset();
     }
 
     /// <inheritdoc/>
-    protected override void Stop(bool resetTimer)
+    protected override double GetCurrentTime()
     {
-        MidiPlayback?.Stop();
-        MidiPlayback?.Dispose();
-        AutomationCTS?.Cancel();
-
-        if (resetTimer)
-            PlaybackStopWatch.Reset();
-        else
-            PlaybackStopWatch.Stop();
+        return MidiPlayback == null ? 0.0 : MidiPlayback.GetCurrentTime<MetricTimeSpan>().TotalSeconds;
     }
 
     /// <inheritdoc/>
@@ -139,11 +126,7 @@ public class MidiClip : Clip
             throw new ArgumentOutOfRangeException(nameof(time), $"Seek time must be between {StartMarker:n2} and {GetDuration():n2}. (file duration)");
         }
 
-        if (MidiPlayback != null)
-        {
-            MidiPlayback.MoveToTime(new MetricTimeSpan(TimeSpan.FromSeconds(time)));
-            PlaybackStopWatch.SetTime(TimeSpan.FromSeconds(time));
-        }
+        MidiPlayback?.MoveToTime(new MetricTimeSpan(TimeSpan.FromSeconds(time)));
     }
 
     /// <inheritdoc/>
