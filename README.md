@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/ImAxel0/Sonora-docs/blob/main/src/assets/logo.png" width="250" height="250" />
+  <img src="https://github.com/ImAxel0/Sonora-docs/blob/main/src/assets/sonora.png" width="300" height="300" />
 </p>
 
 # Sonora ![GitHub License](https://img.shields.io/badge/License-MIT-default.svg) ![NuGet Version](https://img.shields.io/nuget/v/Sonora) [![Scc Count Badge](https://sloc.xyz/github/ImAxel0/Sonora/)](https://github.com/ImAxel0/Sonora/)
@@ -10,9 +10,7 @@
 
 Sonora is a .NET audio framework which provides a structured workflow for handling audio/MIDI clips, tracks, and real-time processing, making it ideal for digital audio applications.
 
-![Audio graph](https://github.com/ImAxel0/Sonora-docs/blob/main/src/assets/audio-graph.png)
-
-[**Documentation**](https://Sonora-docs-9zp.pages.dev) 📙
+[**Documentation**](https://sonora-docs.pages.dev) 📙
 
 ## Core Features :rocket:
 - **Audio and Midi clips**: create Audio and Midi clips, tweak their options, place them in tracks and play them.
