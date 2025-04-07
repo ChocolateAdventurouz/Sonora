@@ -63,7 +63,7 @@ public abstract class Track
     internal MixingSampleProvider Mixer { get; set; }
 
     /// <summary>
-    /// SamplePovider which store and manage VST plugins.
+    /// SampleProvider which store and manage plugins.
     /// </summary>
     internal PluginChainSampleProvider PluginChainSampleProvider { get; set; }
 
@@ -295,7 +295,6 @@ public abstract class Track
 
         if (IsAudioTrack && plugin.PluginType == PluginType.Instrument)
         {
-            plugin.Dispose();
             return OperationResult.Failure("Cannot add an instrument plugin to an audio track.");
         }
         PluginChainSampleProvider.AddPlugin(plugin);

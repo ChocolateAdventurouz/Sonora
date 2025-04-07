@@ -259,6 +259,7 @@ public class MidiClip : Clip
         throw new NotSupportedException("Reverse of midi clips is not supported.");
     }
 
+    /// <inheritdoc/>
     public override Clip Duplicate()
     {
         return new MidiClip(MidiFile.Clone(), this.Track)
