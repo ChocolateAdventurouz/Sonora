@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.imgur.com/gSr1Wwh.png" width="250" height="250" />
+  <img src="https://github.com/ImAxel0/Aura-docs/blob/main/src/assets/logo.png" width="250" height="250" />
 </p>
 
 # Aura ![GitHub License](https://img.shields.io/badge/License-MIT-default.svg) ![NuGet Version](https://img.shields.io/nuget/v/Aura.NET) [![Scc Count Badge](https://sloc.xyz/github/ImAxel0/Aura/)](https://github.com/ImAxel0/Aura/)
@@ -9,6 +9,8 @@
 ---
 
 Aura is a .NET audio framework which provides a structured workflow for handling audio/MIDI clips, tracks, and real-time processing, making it ideal for digital audio applications.
+
+![Audio graph](https://github.com/ImAxel0/Aura-docs/blob/main/src/assets/audio-graph.png)
 
 [**Documentation**](https://aura-docs-9zp.pages.dev) 📙
 
