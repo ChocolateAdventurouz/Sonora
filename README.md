@@ -21,7 +21,7 @@ Sonora is a .NET audio framework which provides a structured workflow for handli
 
 - **Automations**: automate clips parameters like volume and pan during playback.
 
-Too see a more comprehensive list see the [FEATURES.md](https://github.com/ImAxel0/Sonora/blob/master/Sonora/FEATURES.md) document.
+Too see a more comprehensive list see the [FEATURES.md](https://github.com/ImAxel0/Sonora/blob/master/FEATURES.md) document.
 
 ## Highlights :star2:
 - **Built on Robust Libraries**: the framework makes use of popular open source libraries like NAudio, DryWetMidi, SoundTouch.Net and VST.NET.
@@ -80,6 +80,9 @@ private static void Main()
     Console.ReadKey();
 }
 ```
+
+## Contributing 🙋‍♂️
+If you want to contribute to the project, read the [CONTRIBUTING.md](https://github.com/ImAxel0/Sonora/blob/master/CONTRIBUTING.md) document.
 
 ## License 🔑
 This project is MIT-licensed, but uses the following LGPL-2.1 libraries:  
